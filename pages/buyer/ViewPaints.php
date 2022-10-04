@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+        <!-- partial -->
+        <?php include '../header.php'; ?>
+        <?php
+        $seller_id=$_GET['seller_id'];
+        $pohead_id = $_GET['pohead_id'];
+        if($seller_id=="")
+        {
+            header("Location:ViewSeller.php");
+        }
+        ?>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Paint's Details</h4>
+                    <p class="card-description"> Paint <code>.table</code>
+                        <?php
+                        if($pohead_id!=0)
+                        {
+                            ?>
+                        <a href="PaintCart.php?pohead_id=<?php echo $pohead_id;?>" class="btn btn-success" style="float: right;margin-left: 10px;">PAINT CART</a>
+                        <?php
+                        }
+                        ?>
+                        <a href="ViewSeller.php" class="btn btn-gradient-light" style="float: right">BACK</a><br><br><br>
+                    </p>
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>No</th>
+                          <th>Name</th>
+                          <th>Rate</th>
+                          <th>Available Colors</th>
+                          <th>View More</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <?php
+                          $i=1;
+                          $sel="select * from tbl_paint where paint_status<>'deactive' and seller_id='".$seller_id."'";
+                          $row=mysqli_query($con,$sel);
+                          while($data=mysqli_fetch_array($row))
+                          {
+                              
+                          ?>
+                        <tr>
+                          <td><?php echo $i?></td>
+                          <td><?php echo $data['paint_name'];?></td>
+                          <td><?php echo $data['paint_price'];?></td>
+                          <td>
+                              
+                          <?php
+                          $sel2="select * from tbl_paint_color where pcolor_status<>'deactive' and paint_id='".$data['paint_id']."'";
+                          $row2=mysqli_query($con,$sel2);
+                          $num_cl= mysqli_num_rows($row2);
+                          if($num_cl>0)
+                          {
+                              while($data2=mysqli_fetch_array($row2))
+                            {
+                            ?>
+                            <img src="../colors/<?php echo $data2['pcolor_pic'];?>" style="margin: 5px;width: 30px;height: 30px;"><br>
+                            <?php
+                            }
+                          }
+                          if($data['paint_status']=="active")
+                          {
+                          ?>
+                          
+                            <?php
+                          }
+                          ?>
+                          </td>
+                          <td class="text-success"><a href="PaintProfile.php?paint_id=<?php echo $data['paint_id'];?>"> View More </a></td>
+                        </tr>
+                          
+                          <?php
+                          $i++;
+                          }
+                          
+                          ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <?php include '../footer.php'; ?>
+
